@@ -31,7 +31,7 @@ namespace HttpCat.Middleware
             {
                 if (!context.Response.HasStarted)
                 {
-                    await context.Response.WriteAsync($"https://http.cat/{context.Response.StatusCode}");
+                    await context.Response.WriteAsync($"<!DOCTYPE html><html><body><img src=\"https://http.cat/{context.Response.StatusCode}\" alt=\"{context.Response.StatusCode}\"</body></html>");
                 }
             }
         }
