@@ -12,9 +12,28 @@ namespace HttpCat.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext context)
         {
-            await _next(httpContext);
+            try
+            {
+                await _next(context);
+            }
+            catch
+            {
+                if (context.Response.HasStarted)
+                {
+                    throw;
+                }
+
+                context.Response.StatusCode = 500;
+            }
+            finally
+            {
+                if (!context.Response.HasStarted)
+                {
+                    await context.Response.WriteAsync($"https://http.cat/{context.Response.StatusCode}");
+                }
+            }
         }
     }
 }
